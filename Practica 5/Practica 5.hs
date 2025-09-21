@@ -131,3 +131,42 @@ compose Just :: (a -> Maybe b) -> b
 
 Pote Chocolate :: Gusto -> Gusto -> Helado
 compose uncurry (Pote Chocolate) :: (Gusto, Gusto) -> Helado
+
+
+-- Ejercicio 7:
+-- La función que tiene el constructor S es la que describe a los elementos que se encuentran dentro del conjunto.
+data Set a = S (a -> Bool)
+
+pares = S (\n -> esPar n)       o       pares = S esPar
+pares :: Set Int
+
+belongs :: Set a -> a -> Bool
+belongs    (S f)    a = f a 
+
+empty :: Set a
+empty = S (\x -> False)
+
+singleton :: a -> Set a
+singleton    x =  S (\y -> y == x)
+
+union :: Set a -> Set a -> Set a
+union    set1    set2     = S (\x -> belongs set1 x || belongs set2 x)
+
+intersection :: Set a -> Set a -> Set a
+intersection    set1    set2     = S (\x -> belongs set1 x && belongs set2 x)
+
+
+-- Ejercicio 8:
+data MayFail a = Raise Exception | Ok a
+data Exception = DivByZero | NotFound | NullPointer | Other String
+type ExHandler a = Exception -> a
+
+-- Definir funcion: Que dada una computación que puede fallar, una función que indica cómo continuar si
+-- no falla, y un manejador de los casos de falla, expresa la computación completa.
+
+-- f: La computación de una funcion que puede fallar.
+-- g: Funcion que indica como continuar si no falla f.
+-- h: Manejador de los casos de falla de f.
+
+--               f           g              h      
+tryCatch :: MayFail a -> (a -> b) -> ExHandler b -> b
