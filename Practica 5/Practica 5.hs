@@ -170,3 +170,5 @@ type ExHandler a = Exception -> a
 
 --               f           g              h      
 tryCatch :: MayFail a -> (a -> b) -> ExHandler b -> b
+tryCatch    (Raise e)    _           h           = h e
+tryCatch    (Ok x)       g           _           = g x   
